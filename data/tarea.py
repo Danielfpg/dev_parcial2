@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, String, DateTime, Enum, ForeignKey
 from sqlalchemy.orm import relationship
 from datetime import datetime
-from estados import EstadoTarea
+from data.estados import EstadoTarea
 from utils.connection_db import Base
 
 

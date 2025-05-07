@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, Enum, Boolean
 from sqlalchemy.orm import relationship
-from estados import EstadoUsuario
+from data.estados import EstadoUsuario
 from utils.connection_db import Base
 
 class Usuario(Base):
