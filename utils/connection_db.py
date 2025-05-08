@@ -4,7 +4,7 @@ from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy.orm import sessionmaker, declarative_base
 
 # Cargar variables de entorno desde .env
-load_dotenv()
+load_dotenv(dotenv_path="variables.env")
 
 Base = declarative_base()
 
