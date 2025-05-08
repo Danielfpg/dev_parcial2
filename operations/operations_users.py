@@ -5,12 +5,13 @@ from data.usuario import Usuario
 from data.estados import EstadoUsuario
 
 # Crear un usuario
-async def db_create_usuario(db_session: AsyncSession, nombre: str, email: str):
-    nuevo_usuario = Usuario(nombre=nombre, email=email)
+async def db_create_usuario(db_session: AsyncSession, id: int, nombre: str, email: str):
+    nuevo_usuario = Usuario(id=id, nombre=nombre, email=email)
     db_session.add(nuevo_usuario)
     await db_session.commit()
     await db_session.refresh(nuevo_usuario)
     return nuevo_usuario
+
 
 # Consultar todos los usuarios
 async def db_get_all_usuarios(db_session: AsyncSession):

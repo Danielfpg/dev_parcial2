@@ -6,7 +6,7 @@ from sqlalchemy.orm import sessionmaker, declarative_base
 # Cargar variables de entorno desde .env
 load_dotenv(dotenv_path="variables.env")
 
-Base = declarative_base()
+Base = declarative_base ()
 
 # Extraer variables de entorno
 USER = os.getenv('CLEVER_USER')

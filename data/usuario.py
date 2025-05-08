@@ -6,7 +6,7 @@ from utils.connection_db import Base
 class Usuario(Base):
     __tablename__ = "usuarios"
 
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(Integer, primary_key=True, index=True, autoincrement=False)
     nombre = Column(String, nullable=False)
     email = Column(String, unique=True, nullable=False, index=True)
     estado = Column(Enum(EstadoUsuario), default=EstadoUsuario.activo)

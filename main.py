@@ -33,12 +33,23 @@ async def root():
 # ---------- USUARIOS ----------
 
 @app.post("/usuarios")
-async def crear_usuario(nombre: str, email: str, db: AsyncSession = Depends(get_session)):
-    return await db_create_usuario(db, nombre, email)
+async def crear_usuario(id: int, nombre: str, email: str, db: AsyncSession = Depends(get_session)):
+    return await db_create_usuario(db, id, nombre, email)
 
-@app.get("/usuarios")
-async def obtener_usuarios(db: AsyncSession = Depends(get_session)):
-    return await db_get_all_usuarios(db)
+
+@app.get("/usuarios/estado/{estado}")
+async def obtener_usuarios_por_estado(estado: str, db: AsyncSession = Depends(get_session)):
+    estado_str = estado.strip().lower()
+    if estado_str == "activo":
+        estado_enum = EstadoUsuario.activo
+    elif estado_str == "inactivo":
+        estado_enum = EstadoUsuario.inactivo
+    elif estado_str == "eliminado":
+        estado_enum = EstadoUsuario.eliminado
+    else:
+        raise HTTPException(status_code=400, detail="Estado inválido")
+
+    return await db_get_usuarios_por_estado(db, estado_enum)
 
 @app.get("/usuarios/{usuario_id}")
 async def obtener_usuario(usuario_id: int, db: AsyncSession = Depends(get_session)):
@@ -47,9 +58,26 @@ async def obtener_usuario(usuario_id: int, db: AsyncSession = Depends(get_sessio
         raise HTTPException(status_code=404, detail="Usuario no encontrado")
     return usuario
 
+from data.estados import EstadoUsuario
+
 @app.patch("/usuarios/{usuario_id}/estado")
 async def actualizar_estado_usuario(usuario_id: int, nuevo_estado: str, db: AsyncSession = Depends(get_session)):
-    return await db_update_estado_usuario(db, usuario_id, nuevo_estado)
+    estado_str = nuevo_estado.strip().lower()
+    if estado_str == "activo":
+        estado_enum = EstadoUsuario.activo
+    elif estado_str == "inactivo":
+        estado_enum = EstadoUsuario.inactivo
+    elif estado_str == "eliminado":
+        estado_enum = EstadoUsuario.eliminado
+    else:
+        raise HTTPException(status_code=400, detail="Estado inválido")
+
+    actualizado = await db_update_estado_usuario(db, usuario_id, estado_enum)
+    if not actualizado:
+        raise HTTPException(status_code=404, detail="Usuario no encontrado")
+
+    return {"mensaje": "Estado actualizado correctamente"}
+
 
 @app.patch("/usuarios/{usuario_id}/premium")
 async def hacer_usuario_premium(usuario_id: int, es_premium: bool, db: AsyncSession = Depends(get_session)):
